@@ -8,6 +8,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'generatecaption.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class Home extends StatefulWidget {
   // const Home({Key? key}) : super(key: key);
@@ -20,7 +21,8 @@ class _HomeState extends State<Home> {
   bool _loading = true;
   File _image;
   final picker = ImagePicker();
-  String resultText = 'Fetching Response...';
+  FlutterTts flutterTts = FlutterTts();
+  String resultText = 'now we are describing the captured frame for you \n';
 
   pickimage() async {
     var image = await picker.getImage(source: ImageSource.camera);
@@ -75,9 +77,13 @@ class _HomeState extends State<Home> {
     for (var prediction in predictions) {
       var caption = prediction['caption'];
       var probability = prediction['probability'];
-      r = r + '$caption \n\n';
+      r = caption;
     }
+    r = 'there is ' + r;
     setState(() {
+      flutterTts.setLanguage('en-US');
+      flutterTts.setPitch(0.89);
+      flutterTts.speak(r);
       resultText = r;
     });
   }
@@ -270,7 +276,7 @@ class _HomeState extends State<Home> {
                                               setState(() {
                                                 _loading = true;
                                                 resultText =
-                                                    'Fetching Response...';
+                                                    'now we are describing the captured frame for you \n';
                                               });
                                             },
                                             icon: Icon(

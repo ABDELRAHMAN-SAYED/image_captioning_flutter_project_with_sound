@@ -9,6 +9,7 @@ import 'package:camera/camera.dart';
 import 'package:mime/mime.dart';
 import 'package:async/async.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class GnerateLiveCaptions extends StatefulWidget {
   // const GnerateLiveCaptions({Key? key}) : super(key: key);
@@ -18,10 +19,11 @@ class GnerateLiveCaptions extends StatefulWidget {
 }
 
 class _GnerateLiveCaptionsState extends State<GnerateLiveCaptions> {
-  String resultText = 'Fetching Response...';
+  String resultText = 'now we are describing the captured frame for you \n';
   List<CameraDescription> cameras;
   CameraController controller;
   bool takephoto = false;
+  FlutterTts flutterTts = FlutterTts();
 
   @override
   void initState() {
@@ -105,9 +107,13 @@ class _GnerateLiveCaptionsState extends State<GnerateLiveCaptions> {
     for (var prediction in predictions) {
       var caption = prediction['caption'];
       var probability = prediction['probability'];
-      r = r + '$caption\n\n';
+      r = caption;
     }
+    r = 'there is ' + r;
     setState(() {
+      flutterTts.setLanguage('en-US');
+      flutterTts.setPitch(0.89);
+      flutterTts.speak(r);
       resultText = r;
     });
   }
